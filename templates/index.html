@@ -37,7 +37,6 @@
             transition: background 0.3s;
         }
 
-        /* 2018 Header Stili */
         .header {
             padding: 12px 20px;
             border-bottom: 1px solid var(--border-color);
@@ -70,7 +69,6 @@
             font-size: 13px;
         }
 
-        /* Chat Penceresi */
         #chat-window {
             flex: 1;
             overflow-y: auto;
@@ -104,13 +102,6 @@
             border-bottom-left-radius: 2px;
         }
 
-        .ai-image {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
         .speak-btn {
             background: none;
             border: none;
@@ -121,7 +112,6 @@
             color: var(--primary-green);
         }
 
-        /* Giriş Alanı */
         .input-container {
             padding: 30px 20px;
             background: linear-gradient(transparent, var(--bg-color) 20%);
@@ -201,7 +191,7 @@
 
     <div id="chat-window">
         <div class="message ai">
-            Merhaba Alp Tuna! <b>Nano Banana</b> motoruyla hazırlandım. Bana resim çizebilirsin, fotoğraf analiz ettirebilirsin ya da sadece sohbet edebilirsin. 🍌
+            Merhaba Alp Tuna! <b>Nano Banana</b> motoruyla hazırlandım. Bana resim gönderebilir, fotoğraf analiz ettirebilir ya da sadece sohbet edebilirsin. 🍌
         </div>
     </div>
 
@@ -229,7 +219,7 @@
 
             if (!text && !file) return;
 
-            // FormData hazırlığı
+            // HATA DÜZELTME: FormData kullanıyoruz (JSON değil)
             const formData = new FormData();
             formData.append('message', text);
             if (file) formData.append('image', file);
@@ -245,7 +235,7 @@
             try {
                 const response = await fetch('/chat', {
                     method: 'POST',
-                    body: formData
+                    body: formData // FormData ile dosya ve metin gönderimi
                 });
                 const data = await response.json();
                 
@@ -268,7 +258,7 @@
                 img.style.marginBottom = '10px';
                 div.appendChild(img);
             }
-            div.appendChild(document.createTextNode(text));
+            if (text) div.appendChild(document.createTextNode(text));
             chatWindow.appendChild(div);
             scrollDown();
         }
@@ -281,14 +271,6 @@
             const textContent = document.createElement('div');
             textContent.innerText = data.response;
             div.appendChild(textContent);
-
-            // Eğer Nano Banana görsel oluşturduysa
-            if (data.type === 'image' && data.image_url) {
-                const img = document.createElement('img');
-                img.src = data.image_url;
-                img.className = 'ai-image';
-                div.appendChild(img);
-            }
 
             // Sesli Okuma Butonu
             const speakBtn = document.createElement('button');
